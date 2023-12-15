@@ -99,10 +99,18 @@ public class DanhSachKhachHang implements ThaoTac {
 	}
 	//CÁC THAO TÁC TRÊN DANH SÁCH KHÁCH HÀNG
 	//=====ĐƯA DỮ LIỆU CỦA KHÁCH HÀNG VÀO HOÁ ĐƠN=====
-	public String TruyenDuLieu_KH(String makhachhang) {
+	public String TruyenDuLieu_KH_Ten(String makhachhang) {
 		for(int i = 0; i < n; i++) {
 			if(kh[i].getMakh().indexOf(makhachhang) != -1) {
-				return kh[i].ho + " " + kh[i].ten;
+				return kh[i].ten;
+			}
+		}
+		return null;
+	}
+        public String TruyenDuLieu_KH_Ho(String makhachhang) {
+		for(int i = 0; i < n; i++) {
+			if(kh[i].getMakh().indexOf(makhachhang) != -1) {
+				return kh[i].ho;
 			}
 		}
 		return null;

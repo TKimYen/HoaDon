@@ -23,6 +23,15 @@ public class DanhSachSanPham implements ThaoTac{
 	Scanner sc = new Scanner(System.in);
 	//CONSTRUCTOR
 	public DanhSachSanPham() {}
+
+    public SanPham[] getSp() {
+        return sp;
+    }
+
+    public void setSp(SanPham[] sp) {
+        this.sp = sp;
+    }
+        
 	//NHẬP DANH SÁCH XUẤT DANH SÁCH
 	public void NhapDanhSach() {
 		System.out.print("Nhập vào số lượng sản phẩm: ");

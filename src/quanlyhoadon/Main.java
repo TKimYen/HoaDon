@@ -10,9 +10,10 @@ import java.io.FileNotFoundException;
  *
  * @author DELL
  */
-public class TestHoaDon {
+public class Main {
+    
     public static void main(String[] args) throws FileNotFoundException {
-        DanhSachHoaDon ql = new DanhSachHoaDon();
+        Menu ql = new Menu();
         ql.menu();
     }
 }

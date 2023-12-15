@@ -99,15 +99,23 @@ public class DanhSachNhanVien implements ThaoTac {
 		return false;
 	}
 	
-	public String Search_MNV(String manhanvien) {
+	public String TruyenDuLieu_NV_Ho(String manhanvien) {
 		for(int i = 0; i < n; i++) {
-			if(nv[i].getManv().indexOf(manhanvien) != -1) {
-				return nv[i].ho + " " + nv[i].ten;
+			if(nv[i].getManv().equals(manhanvien)) {
+				return nv[i].ho;
 			}
 		}
 		return null;
 	}
-	//TÌM KIẾM THEO HỌ VÀ TÊN LÓT, TÊN
+        public String TruyenDuLieu_NV_Ten(String manhanvien) {
+		for(int i = 0; i < n; i++) {
+			if(nv[i].getManv().equals(manhanvien)) {
+				return nv[i].ten;
+			}
+		}
+		return null;
+	}
+	//TÌM KIẾM THEO HỌ VÀ TÊN LÓT, 
 	public boolean Search_Name(String name) {
 		for(int i = 0; i < n; i++) {
 			if(nv[i].ho.indexOf(name) != -1) {
@@ -120,6 +128,7 @@ public class DanhSachNhanVien implements ThaoTac {
 		return false;
 	}
 	
+        
 	//THÊM MỘT NHÂN VIÊN VÀO DANH SÁCH
 	@Override
 	public void Insert(int sl) {
@@ -193,6 +202,13 @@ public class DanhSachNhanVien implements ThaoTac {
 		}
 	}
 	//TÌM KIẾM NHÂN VIÊN
+        public boolean Search_Exist(String manv){
+            for(int i = 0; i < n; i++){
+                if(nv[i].getManv().equals(manv))
+                    return true;
+            }
+            return false;
+        }
 	public void Search_MaNhanVien(String manv) {
 		System.out.println("\t\t\t\t\t\t\t\t\t\t=======KẾT QUẢ======");
 		System.out.println("===========================================================================================================================================================================");

@@ -22,12 +22,12 @@ import java.util.Scanner;
 public class DanhSachHoaDon {
     DanhSachNhanVien dsnv = new DanhSachNhanVien();
     DanhSachKhachHang dskh = new DanhSachKhachHang();
-    private ChiTietHoaDon[] cthd;
     private HoaDon [] hd;
     Scanner sc = new Scanner(System.in);
-    private int sizeHD, sizeCTHD, a = 0, b = 0;
+    private int sizeHD, a = 0, b = 0;
     
     public DanhSachHoaDon() {
+//        hd = new HoaDon[1];
     }
 
     public DanhSachNhanVien getNv() {
@@ -46,14 +46,6 @@ public class DanhSachHoaDon {
         this.dskh = kh;
     }
 
-    public ChiTietHoaDon[] getCthd() {
-        return cthd;
-    }
-
-    public void setCthd(ChiTietHoaDon[] cthd) {
-        this.cthd = cthd;
-    }
-
     public HoaDon[] getHd() {
         return hd;
     }
@@ -70,92 +62,53 @@ public class DanhSachHoaDon {
         this.sizeHD = sizeHD;
     }
 
-    public int getSizeCTHD() {
-        return sizeCTHD;
-    }
-
-    public void setSizeCTHD(int sizeCTHD) {
-        this.sizeCTHD = sizeCTHD;
-    }
-
-public void NhapDanhSach() throws FileNotFoundException {
-    Scanner sc = new Scanner(System.in);
-    System.out.print("Nhập vào số lượng hoá đơn: ");
-    sizeHD = sc.nextInt();
-     System.out.print("\\\\\\\\n Đây là sl hoa don: " + sizeHD);
-     sc.nextLine();
-     // Khởi tạo mảng hd
-     hd = new HoaDon[sizeHD];  
-    for(int i = 0; i < sizeHD; i++) {
-        if(hd[i] == null)
-            System.out.println("\n\nHD:  " + 1);
-        System.out.print("\n\t\t\t\t\tHOÁ ĐƠN THỨ " + (i + 1) + "\n");
-        hd[i] = new HoaDon();
-        hd[i].nhap();
-        if(i > 0){                
-        ThayDoiMHD(hd[i].getMaHoaDon());
-        }
-        System.out.print("\\\\\\\\nĐây là stt i: " + i + " Đây là sl hoa don: " + sizeHD++);
-        String mahd = null;
-        if(hd[i] != null){
-            mahd = hd[i].getMaHoaDon();
-            System.out.print(" \n\n mahd :" + mahd);
-        }
-        else if( hd[i] == null){
-                System.out.print(" \n\nHD trống");
-        }
-        else
-            System.out.print(" Hoa Don " + i + " không tồn tại");
-       
-        System.out.print("\n\\Nhập số chi tiết hóa đơn: ");
-        sizeCTHD = sc.nextInt();
+    public void NhapDanhSach(DanhSachHoaDon dshd, DanhSachSanPham dssp, DanhSachNhanVien dsnv, DanhSachKhachHang dskh) throws FileNotFoundException {
+        System.out.print("Nhập vào số lượng hoá đơn: ");
+        sizeHD = sc.nextInt();
         sc.nextLine();
-        cthd = new ChiTietHoaDon[sizeCTHD];
-        for(int j = 0; j < sizeCTHD; j++)
-        {
-            cthd[j] = new ChiTietHoaDon();
-            cthd[j].nhap(mahd);
+        if (sizeHD > 0) {
+//          Khởi tạo mảng hd
+            hd = new HoaDon[sizeHD];
+            // Nhập thông tin hóa đơn
+            for (int i = 0; i < sizeHD; i++) {
+                hd[i] = new HoaDon();
+                hd[i].nhap(dshd, dssp, dsnv, dskh);
+            }
+        } 
+        else {
+            System.out.println("Số lượng hóa đơn phải lớn hơn 0.");
         }
-        hd[i].setTongTien(tinhTongTien(hd[i].getMaHoaDon()));
-        System.out.print("\n\\Tổng tiền của hóa đơn này là: " + hd[i].getTongTien());
     }
-    System.out.print("\n\nĐây là test in hóa đơn: \n\n");
-    XuatDanhSach();
-    GhiFileJava("HoaDondata.txt", "ChiTietHoaDondata.txt");
-}
-   /////////////Kiem tra ma co trung hay khong
-        
-    public void ThayDoiMHD(String mahd) throws FileNotFoundException {
-		do {
-			if(KiemTraTrungMaHD(mahd)) {
-				XuatDanhSach();
-				System.err.println();
-                                int stt = TimSTTMaHD(mahd);
-				System.err.format("\nHoá đơn thứ " + stt + " có mã " + mahd + " bị trùng mã hoá đơn. Ấn phím enter để tiếp tục");
-				sc.nextLine();
-				System.err.println("Hãy nhập lại mã HĐ cho hoá đơn: ");
-				mahd = sc.nextLine();
-				hd[stt - 1].setMaHoaDon(mahd);
-				GhiFileJava("HoaDondata.txt","ChiTietHoaDondata.txt");
-				hd[stt - 1].setMaHoaDon(mahd);
-			}
-		}while(KiemTraTrungMaHD(mahd));
-	}
-    	
-public boolean KiemTraTrungMaHD(String mahd) throws FileNotFoundException {
-    DocFileJava("HoaDondata.txt","ChiTietHoaDondata.txt");
-    boolean trung = false;
-    for(int i = 0; i < sizeHD; i++) {
-        if(hd[i].getMaHoaDon().equals(mahd)) {
-            trung = true;  
-	}
-    }
-    return trung;
-    }
+    /////////////Kiem tra ma co trung hay khong
+//        
+//    public void ThayDoiMHD(String mahd) throws FileNotFoundException {
+//		do {
+//			if(KiemTraTrungMaHD(mahd)) {
+//                                int stt = TimSTTMaHD(mahd);
+//				System.err.format("\nHoá đơn thứ " + stt + " có mã " + mahd + " bị trùng mã hoá đơn. Ấn phím enter để tiếp tục");
+//				sc.nextLine();
+//				System.err.println("Hãy nhập lại mã HĐ cho hoá đơn: ");
+//				mahd = sc.nextLine();
+//				hd[stt - 1].setMaHoaDon(mahd);
+//				GhiFileJava("HoaDondata.txt");
+////				hd[stt - 1].setMaHoaDon(mahd);
+//			}
+//		}while(KiemTraTrungMaHD(mahd));
+//	}
+//    	
+//public boolean KiemTraTrungMaHD(String mahd) throws FileNotFoundException {
+//    boolean trung = false;
+//    for(int i = 0; i < sizeHD; i++) {
+//        if(hd[i].getMaHoaDon().equals(mahd)) {
+//            trung = true;  
+//	}
+//    }
+//    return trung;
+//    }
 
-public int TimSTTMaHD(String mahd) throws FileNotFoundException{
+public int TimSTTMaHD(String mahd){
     int stt = 0;
-    DocFileJava("HoaDondata.txt","ChiTietHoaDondata.txt");
+//    DocFileJava("HoaDon.txt");
 	for(int i = 0; i < sizeHD; i++) {
             if(hd[i].getMaHoaDon().contains(mahd)) {
 		stt = i + 1;
@@ -185,66 +138,58 @@ public int TimSTTMaHD(String mahd) throws FileNotFoundException{
 //    GhiFileJava("HoaDondata.txt", "ChiTietHoaDondata.txt");
 //    }
 
-    public double tinhTongTien(String ma){
-        double tongTien = 0;
-        for(int i = 0; i < sizeCTHD; i++){
-            if(cthd[i].getMaHoaDon().equals(ma)){
-                tongTien += cthd[i].getThanhTien();
-            }
-        }
-        return tongTien;
-    }
     //////////////Xuat danh sach
     	public void XuatDanhSach(){
 		System.out.println("\t\t\t\t\t\t\t\t=====DANH SÁCH HOÁ ĐƠN=====");
 		System.out.println("\n================================================================================================================================================================================================================");
 		System.out.format("|| %4s | %10s | %10s | %30s | %25s | %15s ||\n", "STT", "MÃ HOÁ ĐƠN", "MÃ KHÁCH HÀNG", "HỌ TÊN CỦA KHÁCH HÀNG", "NHÂN VIÊN PHỤ TRÁCH", "NGÀY LẬP HĐ");
 		try {
-			for(int i = 0; i < hd.length; i++) {
-				System.out.format("|| %4s |", (i + 1));
-                                if(hd[i] != null){
-                                    hd[i].xuat();
-                                    System.out.println("Thông tin chi tiết hóa đơn:");
-                                    System.out.format("|| %4s | %10s | %10s | %30s | %25s | %15s ||\n", "STT", "MÃ HOÁ ĐƠN", "MÃ SẢN PHẨM", "SỐ LƯỢNG", "ĐƠN GIÁ", "THÀNH TIỀN");
-                                    for(int j = 0; j < sizeCTHD; j++) {
-                                        System.out.format("|| %4s |", (j + 1));
-                                        if(cthd[j] != null && cthd[i].getMaHoaDon().equals(hd[i].getMaHoaDon()));
-                                        cthd[j].xuat();
-                                }
+			for (int i = 0; i < sizeHD; i++) {
+                            System.out.println("\n\t\t\t\t\tHOÁ ĐƠN THỨ " + (i + 1));
+                            hd[i].xuat();
+                            System.out.println("Tổng tiền của hóa đơn này là: " + hd[i].getTongTien());
                 }
-			}
+			
 		}catch(NullPointerException npe) {	
 		}
 		System.out.println("================================================================================================================================================================================================================");
 		
-	}
+}
 
- 
-        //////////////////////  
-    public void them(int sl){
-        Scanner sc = new Scanner(System.in);
-        //nhap thong tin hoa don
-        for(int i = 0; i < sl; i++){
-            hd = Arrays.copyOf(hd, hd.length + 1);
-            hd[hd.length - 1] = new HoaDon();
-            hd[hd.length - 1].nhap();
-
-            int lc = 1;
-            double tongTien = 0.0;
-            int slCTHD = 0;
-            System.out.println("Nhap thong tin chi tiet hoa don: ");
-            do{
-                cthd = Arrays.copyOf(cthd, cthd.length + 1);
-                cthd[cthd.length - 1] = new ChiTietHoaDon();
-                cthd[cthd.length - 1].nhap(hd[i].getMaHoaDon());
-                slCTHD++;
-                System.out.print("Nhap tiep(1: co || 0: khong): ");
-                lc = sc.nextInt();
+//              HÀM NHẬP LÀM MẪU
+//     public void NhapDanhSach(DanhSachHoaDon dshd, DanhSachSanPham dssp, DanhSachNhanVien dsnv, DanhSachKhachHang dskh) throws FileNotFoundException {
+//        System.out.print("Nhập vào số lượng hoá đơn: ");
+//        sizeHD = sc.nextInt();
+//        sc.nextLine();
+//        if (sizeHD > 0) {
+////          Khởi tạo mảng hd
+//            hd = new HoaDon[sizeHD];
+//            // Nhập thông tin hóa đơn
+//            for (int i = 0; i < sizeHD; i++) {
+//                hd[i] = new HoaDon();
+//                hd[i].nhap(dshd, dssp, dsnv, dskh);
+//            }
+//        } 
+//        else {
+//            System.out.println("Số lượng hóa đơn phải lớn hơn 0.");
+//        }
+//    }
+        
+        //////////////////////  SUA HAM THEM
+    public void them(DanhSachHoaDon dshd, DanhSachSanPham dssp, DanhSachNhanVien dsnv, DanhSachKhachHang dskh){
+        System.out.print("Nhập vào số lượng hoá đơn: ");
+        int sl = sc.nextInt();
+        sc.nextLine();
+        sizeHD += sl;
+        if(sizeHD > 0){
+            hd = Arrays.copyOf(hd, sizeHD);
+            for(int i = sizeHD - sl - 1; i < sizeHD; i++){
+                hd[i] = new HoaDon();
+                hd[i].nhap(dshd, dssp, dsnv, dskh);
             }
-            while(lc == 1);
-            tongTien += tinhTongTien(hd[i].getMaHoaDon());
-            hd[i].setTongTien(tongTien); 
-            setSizeCTHD(slCTHD);
+        }
+        else{
+            System.out.println("Nhập sai số lượng.");
         }
     }
 
@@ -339,19 +284,18 @@ public int TimSTTMaHD(String mahd) throws FileNotFoundException{
         }
     }
     
-    public void tongTienSanPhamTheoNam(){
-        
-        for(int i = 0; i < cthd.length; i++){
-            
-        }
-    }
-    public void menu() throws FileNotFoundException {
-                //GhiFileJava("HoaDondata.txt","ChiTietHoaDondata.txt");
+//    public void tongTienSanPhamTheoNam(){
+//        
+//        for(int i = 0; i < cthd.length; i++){
+//            
+//        }
+//    }
+    public void quanLy(DanhSachHoaDon dshd, DanhSachSanPham dssp, DanhSachNhanVien dsnv, DanhSachKhachHang dskh) throws FileNotFoundException {
 		int select = 0;
 		String mahd = "";
 		loop:
 			while(true) {
-				System.out.println("\t\t\t\t\t======BẢNG LỰA CHỌN======");
+				System.out.println("\t\t\t\t\t======QUẢN LÝ HÓA ĐƠN======");
 				System.out.println("\t\t\t\t\t1.Ấn phím 1 để thêm hoá đơn");
 				System.out.println("\t\t\t\t\t2.Ấn phím 2 để xoá hoá đơn");
 				System.out.println("\t\t\t\t\t3.Ấn phím 3 để sửa thông tin hoá đơn");
@@ -363,7 +307,8 @@ public int TimSTTMaHD(String mahd) throws FileNotFoundException{
 				sc.nextLine();
 				switch(select) {
 					case 1:
-						NhapDanhSach();
+						NhapDanhSach(dshd, dssp, dsnv, dskh);
+//                                                them(dshd, dssp, dsnv, dskh);
 						break;
 					case 2:
 						System.out.print("Nhập vào mã hoá đơn cần xoá: ");
@@ -390,27 +335,22 @@ public int TimSTTMaHD(String mahd) throws FileNotFoundException{
 				}
 			}
 	}
-    public void GhiFileJava(String filename1, String filename2) {
+    public void GhiFileJava(String filename1) {
 		try {
-			DataOutputStream dos1 = new DataOutputStream(new FileOutputStream(filename1));
-                        DataOutputStream dos2 = new DataOutputStream(new FileOutputStream(filename2));
-                        int i = 0, j = 0;
-                        dos1.writeInt(sizeHD);
-                        dos2.writeInt(sizeCTHD);
-			try {
-				for(i = 0; i < hd.length; i++)
-					hd[i].GhiFile(filename1);
-                                        
-                                for(j = 0; j < cthd.length; i++)
-                                            cthd[j].GhiFile(filename2);
-			}catch(NullPointerException npe) {			
-			}
-			dos1.close();
-                        dos2.close();
+                        DataOutputStream dos1 = new DataOutputStream(new FileOutputStream(filename1));
+                        if(sizeHD > 0){
+                            dos1.writeInt(sizeHD);
+                            for(int i = 0; i < sizeHD; i++){
+                                hd[i].GhiFile(filename1);
+                            }
+                        }   
+                        else{
+                            System.out.println("Không có dữ liệu");
+                        }
+                        dos1.close();                        
 		}catch(IOException e) {}
     }
-    
-    public void DocFileJava(String filename1, String filename2) throws FileNotFoundException {
+    public void DocFileJava(String filename1) throws FileNotFoundException {
         int i = 0;
 		try {
 			DataInputStream dis = new DataInputStream(new FileInputStream(filename1));
@@ -428,43 +368,31 @@ public int TimSTTMaHD(String mahd) throws FileNotFoundException{
                                         String hoKhachHang = dis.readUTF();
                                         String tenKhachHang = dis.readUTF();
                                         double tongTien = dis.readDouble();
-					hd[i] = new HoaDon(maHoaDon, ngayLap, maNhanVien, hoNhanVien, tenNhanVien, maKhachHang, hoKhachHang, tenKhachHang, tongTien);
+                                        
+                                        //ĐỌC CÁC CHI TIẾT HÓA ĐƠN
+                                        int slCTHD = dis.readInt();
+                                        ChiTietHoaDon[] cthd = new ChiTietHoaDon[slCTHD];
+                                        for(int j = 0; j < slCTHD; j++){
+                                            maHoaDon = dis.readUTF();
+                                            String maSanPham = dis.readUTF();
+                                            int soLuong = dis.readInt();
+                                            double donGia = dis.readDouble();
+                                            double thanhTien = dis.readDouble();
+                                            cthd[i] = new ChiTietHoaDon(maHoaDon, maSanPham, soLuong, donGia, thanhTien);
+                                        }
+					hd[i] = new HoaDon(maHoaDon, ngayLap, maNhanVien, hoNhanVien, tenNhanVien, maKhachHang, hoKhachHang, tenKhachHang, tongTien, cthd);
                                         i++;
 				}
 			}catch(EOFException e) {
                         }
 			finally {
-                                a = i;
+                                sizeHD = i;
 				dis.close();
 			}
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
-                
-            int  j = 0;
-		try {
-                    
-			DataInputStream dis = new DataInputStream(new FileInputStream(filename2));
-                        sizeCTHD = dis.readInt();
-			cthd = new ChiTietHoaDon[sizeCTHD];
-			try {
-				while(true) {
-                                String maHoaDon = dis.readUTF();
-                                String maSanPham = dis.readUTF();
-                                int soLuong = dis.readInt();
-                                Double donGia = dis.readDouble();
-                                Double thanhTien = dis.readDouble();
-                                cthd[j] = new ChiTietHoaDon(maHoaDon, maSanPham, soLuong, donGia, thanhTien);
-                                j++;
-				}
-			}catch(EOFException e) {}
-			finally {
-				b = j;
-				dis.close();
-			}
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
+            
+    }
     
 }

@@ -9,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -17,9 +17,12 @@ import java.util.Scanner;
  * @author DELL
  */
 public class HoaDon {
-    DanhSachNhanVien nv = new DanhSachNhanVien();
-    DanhSachKhachHang kh = new DanhSachKhachHang();
+    //SUA THANH TRUYEN DOI SO
+//    DanhSachNhanVien nv = new DanhSachNhanVien();
+//    DanhSachKhachHang kh = new DanhSachKhachHang();
     private String maHoaDon;
+    private ChiTietHoaDon cthd[];
+    private int slCTHD;
     private String ngayLap;
     private String maNhanVien;
     private String hoNhanVien;
@@ -29,11 +32,12 @@ public class HoaDon {
     private String tenKhachHang;
     private double tongTien;
     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    Scanner sc = new Scanner(System.in);
     
     public HoaDon() {
     }
 
-    public HoaDon(String maHoaDon, String ngayLap, String maNhanVien, String hoNhanVien, String tenNhanVien, String maKhachHang, String hoKhachHang, String tenKhachHang, Double tongTien) {
+    public HoaDon(String maHoaDon, String ngayLap, String maNhanVien, String hoNhanVien, String tenNhanVien, String maKhachHang, String hoKhachHang, String tenKhachHang, Double tongTien, ChiTietHoaDon cthd[]) {
         this.maHoaDon = maHoaDon;
         this.ngayLap = ngayLap;
         this.maNhanVien = maNhanVien;
@@ -43,11 +47,14 @@ public class HoaDon {
         this.hoKhachHang = hoKhachHang;
         this.tenKhachHang = tenKhachHang;
         this.tongTien = tongTien;
+        this.cthd = cthd;
     }
     
     public HoaDon(HoaDon hd) {
         this.maHoaDon = hd.maHoaDon;
         this.ngayLap = hd.ngayLap;
+        this.slCTHD = hd.slCTHD;
+        this.cthd = hd.cthd;
         this.maNhanVien = hd.maNhanVien;
         this.hoNhanVien = hd.hoNhanVien;
         this.tenNhanVien = hd.tenNhanVien;
@@ -117,21 +124,33 @@ public class HoaDon {
     public void setTongTien(double tongTien) {
         this.tongTien = tongTien;
     }
-////////////// Ham nhap
+////////////// Ham nhap 
+    //SUA HAM NHAP: TRUYEN DOI SO, NHAP CTHD
     
-    public void nhap(){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Định dạng mã sản phẩm: SP + [XX]");
-        do{
-            System.out.println("Định dạng mã sản phẩm: SP + [XX]");
-            System.out.print("Nhập mã hóa đơn: ");
-            maHoaDon = sc.nextLine();
-            if(!maHoaDon.matches("^SP[0-9]{2}$"))
-                System.out.println("Sai số lượng kí tự.");
+    public void nhap(DanhSachHoaDon hd, DanhSachSanPham sp, DanhSachNhanVien nv, DanhSachKhachHang kh){
+        HoaDon [] dshd = hd.getHd();
+        int stt = 0;
+        for(int i = 0; i < dshd.length; i++){
+            try{
+                if(dshd[i].getMaHoaDon() != null){
+                stt++;
+                }
+            }
+            catch(NullPointerException npe){
+            }
         }
-        while(!maHoaDon.matches("^SP[0-9]{2}$"));
-//        System.out.print("Nhap ngay lap hoa don: ");
-//        ngayLap = sc.nextLine();
+        maHoaDon = String.format("HD%03d", stt + 1);
+
+        System.out.println("Mã hóa đơn là: " + maHoaDon);
+//        System.out.println("Định dạng mã sản phẩm: HD + [XX]");
+//        do{
+//            System.out.print("Nhập mã hóa đơn: ");
+//            maHoaDon = sc.nextLine();
+//            if(!maHoaDon.matches("^HD[0-9]{2}$"))
+//                System.out.println("Sai số lượng kí tự.");
+//        }
+//        while(!maHoaDon.matches("^HD[0-9]{2}$"));
+        
         System.err.println("\nNgày nhập hoá đơn phải hợp lệ theo cú pháp dd/MM/yyyy. Nếu không sẽ báo lỗi");
 		System.err.println();
 		do {
@@ -140,83 +159,92 @@ public class HoaDon {
 			
 			if(!CheckDate(ngayLap)) {
 				System.err.println("Ngày tháng năm không hợp lệ. Xin mời nhập lại!");
-				System.err.println();
-			}
-				
+//				System.err.println();
+			}	
 		}while(!CheckDate(ngayLap));
-//        System.out.print("Nhap ma nhan vien: ");
-//        maNhanVien = sc.nextLine();
+                
+//      NHẬP MÃ NV VÀ TRUYỀN HỌ TÊN VÀO
         do {
-            nv.DocFileJava("NhanVien.txt");
+//            nv.DocFileJava("NhanVien.txt");
             nv.XuatDanhSachNV();
             System.out.print("Nhập mã nhân viên phụ trách: ");
             maNhanVien = sc.nextLine();
-            if(nv.Search_MNV(maNhanVien) == null) {
-		System.err.println("\nMã nhân viên không có trong danh sách!");
+            if(nv.Search_Exist(maNhanVien)) {
+                hoNhanVien = nv.TruyenDuLieu_NV_Ho(maNhanVien);
+                tenNhanVien = nv.TruyenDuLieu_NV_Ten(maNhanVien);
             }
-	}while(nv.Search_MNV(maNhanVien)== null);
-//        System.out.print("Nhap ma khach hang: ");
-//        maKhachHang = sc.nextLine();
+            else{
+                System.err.println("\nMã nhân viên không có trong danh sách!");
+            }
+	}while(nv.Search_Exist(maNhanVien) != true);
+        
+//      NHẬP MÃ KH VÀ TRUYỀN HỌ TÊN VÀO 
 	do {
-            kh.DocFileJava("KhachHang.txt");
+//            kh.DocFileJava("KhachHang.txt");
             kh.XuatDanhSach();
             System.out.print("Nhập mã khách hàng: ");
             maKhachHang = sc.nextLine();
-            if(kh.TruyenDuLieu_KH(maKhachHang) == null)
+            tenKhachHang = kh.TruyenDuLieu_KH_Ten(maKhachHang);
+            if(kh.Search_Exist(maKhachHang)){
+                tenKhachHang = kh.TruyenDuLieu_KH_Ten(maKhachHang);
+                hoKhachHang = kh.TruyenDuLieu_KH_Ho(maKhachHang);
+            }
+            else
 		System.err.println("\nMã khách hàng mà bạn vừa nhập không có trong danh sách!");
-	}while(kh.TruyenDuLieu_KH(maKhachHang) == null);
+	}while(kh.Search_Exist(maKhachHang) != true);
         
+        System.out.println("Nhập số lượng chi tiết hóa đơn");
+        slCTHD = sc.nextInt();
+        sc.nextLine();
+        cthd = new ChiTietHoaDon[slCTHD];
+        for(int i = 0; i < slCTHD; i++){
+            cthd[i] = new ChiTietHoaDon();
+            cthd[i].nhap(sp, maHoaDon);
+        }
+        tinhTongTien();
     }
+    
     public boolean CheckDate(String date) {
-		df.setLenient(false);
-		try {
-			df.parse(date);
-		}catch(ParseException e) {
-			return false;
-		}
-		return true;
+        df.setLenient(false);
+	try {
+            df.parse(date);
 	}
-    	public void xuat() {
+        catch(ParseException e) {
+            return false;
+	}
+	return true;
+    }
+    
+    public void xuat() {
 		System.out.format(" %10s | %13s | %30s | %25s | %15s | %15s ||\n", maHoaDon, maKhachHang, tenKhachHang, maNhanVien, ngayLap, tongTien);
-	}
-//    CHI TIET HOA DON
-//    public void xuat(){
-//        System.out.format(" %10s | %20s | %15s | %15s\n", maHoaDon, ngayLap, maNhanVien, maKhachHang);
-//        System.out.println("Ma hoa don: " + maHoaDon);
-//        System.out.println("Ngay lap hoa don: " + ngayLap);
-//        System.out.println("Ma nhan vien: " + maNhanVien);
-//        System.out.println("Ma khach hang: " + maKhachHang);
-//    }
-//    public void nhap(String ma){
-//        //nhap thong tin chi tiet hoa don cua moi hoa don (gan theo ma hoa don)
-//        cthd = Arrays.copyOf(cthd, cthd.length + 1);
-//        cthd[cthd.length - 1] = new ChiTietHoaDon();
-//        cthd[cthd.length - 1].nhap(ma);
-//    }
-//    
-//    public void them(ChiTietHoaDon ct){
-//        cthd = Arrays.copyOf(cthd, cthd.length + 1);
-//        cthd[cthd.length - 1] = new ChiTietHoaDon(ct);
-//    }
-//    
-//    public double tinhTongTien(){
-//        int kq = 0;
-//        for(int i = 0; i < cthd.length; i++){
-//            if(cthd[i] != null)
-//                kq += cthd[i].getDonGia() * cthd[i].getSoLuong();
-//        }
-//        return kq;
-//    }
+                System.out.println("Thông tin chi tiết hóa đơn:");
+                                    System.out.format("|| %4s | %10s | %10s | %30s | %25s | %15s ||\n", "STT", "MÃ HOÁ ĐƠN", "MÃ SẢN PHẨM", "SỐ LƯỢNG", "ĐƠN GIÁ", "THÀNH TIỀN");
+                                    for(int j = 0; j < slCTHD; j++) {
+                                        System.out.format("|| %4s |", (j + 1));
+                                        if(cthd[j] != null);
+                                            cthd[j].xuat();
+                                    }       
+        }
+        
+        public void tinhTongTien(){
+            for(int i = 0; i < slCTHD; i++)
+                tongTien += cthd[i].getThanhTien();
+        }
+ 
     public void GhiFile(String filename) throws IOException {
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(filename, Boolean.TRUE));
 		dos.writeUTF(maHoaDon);
                 dos.writeUTF(ngayLap);
                 dos.writeUTF(maNhanVien);
                 dos.writeUTF(hoNhanVien);
-                dos.writeUTF(hoNhanVien);
+                dos.writeUTF(tenNhanVien);
 		dos.writeUTF(maKhachHang);
                 dos.writeUTF(hoKhachHang);
                 dos.writeUTF(tenKhachHang);
+                dos.writeDouble(tongTien);
+                dos.writeInt(slCTHD);
+                for(int i = 0; i < slCTHD; i++)
+                    cthd[i].GhiFile(filename);       
 		dos.close();
     }
     

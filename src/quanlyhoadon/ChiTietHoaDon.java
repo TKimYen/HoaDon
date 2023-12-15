@@ -14,7 +14,8 @@ import java.util.Scanner;
  * @author DELL
  */
 public class ChiTietHoaDon {
-    DanhSachSanPham dssp = new DanhSachSanPham();
+    //SUA THANH TRUYEN DOI SO
+//    DanhSachSanPham dssp = new DanhSachSanPham();
     private String maHoaDon;
     private String maSanPham;
     private int soLuong;
@@ -80,7 +81,7 @@ public class ChiTietHoaDon {
         this.thanhTien = thanhTien;
     }
     
-    public void nhap(String ma){
+    public void nhap(DanhSachSanPham dssp, String ma){
         Scanner sc = new Scanner(System.in);
         maHoaDon = ma;
 //        System.out.print("Nhap ma san pham: ");
@@ -96,18 +97,12 @@ public class ChiTietHoaDon {
 	}while(!dssp.Search_MaSP(maSanPham));	
         System.out.print("Nhap so luong: ");
         soLuong = sc.nextInt();
-        System.out.print("Nhap don gia: ");
         donGia = dssp.Search_DG(maSanPham);
         thanhTien = soLuong * donGia;  
     }
     
     public void xuat(){
         System.out.format(" %10s | %10s | %10s | %20s | %20s \n", maHoaDon, maSanPham, soLuong, donGia, thanhTien);
-//        System.out.println("Ma hoa don: " + maHoaDon);
-//        System.out.println("Ma san pham: " + maSanPham);
-//        System.out.println("So luong: " + soLuong);
-//        System.out.println("Don gia: " + donGia);
-//        System.out.println("Thanh tien: " + thanhTien);
     }
     
     public void GhiFile(String filename) throws IOException {
@@ -116,7 +111,7 @@ public class ChiTietHoaDon {
                 dos.writeUTF(maSanPham);
                 dos.writeInt(soLuong);
 		dos.writeDouble(donGia);
-                thanhTien = soLuong * donGia;
+//                thanhTien = soLuong * donGia;
                 dos.writeDouble(thanhTien);
 		dos.close();
     }

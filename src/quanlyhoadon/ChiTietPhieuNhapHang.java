@@ -95,11 +95,11 @@ public class ChiTietPhieuNhapHang {
 			dsnv.XuatDanhSachNV();
 			System.out.print("Nhập mã nhân viên phụ trách: ");
 			tennv = sc.nextLine();
-			if(dsnv.Search_MNV(tennv) == null) {
+			if(dsnv.Search_Name(tennv)) {
 				System.err.println("\nMã nhân viên không có trong danh sách!!!");
 			}
-		}while(dsnv.Search_MNV(tennv) == null);
-		tennv = dsnv.Search_MNV(tennv);
+		}while(dsnv.Search_Name(tennv) != true);
+		tennv = dsnv.TruyenDuLieu_NV_Ten(tennv);
 		
 		dsx.DocFileJava("SanPham.txt");
 		dsx.XuatDanhSach();
